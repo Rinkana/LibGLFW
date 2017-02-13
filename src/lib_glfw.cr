@@ -1,5 +1,5 @@
 @[Link("glfw3")]
-lib GLFW
+lib LibGLFW
   type Window = Void*
   type Monitor = Void*
 
