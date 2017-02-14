@@ -1,4 +1,5 @@
 # lib_glfw
+[![Build Status](https://travis-ci.org/Rinkana/lib_glfw.svg?branch=master)](https://travis-ci.org/Rinkana/lib_glfw)
 
 Library to expose the GLFW API to Crystal.
 The original API mapping is made by [ggiraldez](https://github.com/ggiraldez/crystal-gl)
