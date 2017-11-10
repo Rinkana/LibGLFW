@@ -27,7 +27,7 @@ LibGLFW.init
 handle = LibGLFW.create_window(1920, 1080, "GLFW Window", nil, nil)
 LibGLFW.make_context_current handle
 
-# callbacks are supported trough procs (no blocks):
+# callbacks are supported trough procs:
 def handle_key(window : LibGLFW::Window*, key : Int32, scancode : Int32, action : Int32, mods : Int32) : Void
   # Do things width the key
 end

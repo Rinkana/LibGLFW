@@ -292,24 +292,31 @@ lib LibGLFW
   type Monitor = Void*
   type Cursor = Void*
 
-  type ErrorFun = Int32, Int8* ->
-  type WindowPosFun = Window*, Int32, Int32 ->
-  type WindowSizeFun = Window*, Int32, Int32 ->
-  type WindowCloseFun = Window* ->
-  type WindowRefreshFun = Window* ->
-  type WindowFocusFun = Window*, Int32 ->
-  type WindowIconifyFun = Window*, Int32 ->
-  type FramebufferSizeFun = Window*, Int32, Int32 ->
-  type MouseButtonFun = Window*, Int32, Int32, Int32 ->
-  type CursorPosFun = Window*, Float64, Float64 ->
-  type CursorEnterFun = Window*, Int32 ->
-  type ScrollFun = Window*, Float64, Float64 ->
-  type KeyFun = Window*, Int32, Int32, Int32, Int32 ->
-  type CharFun = Window*, UInt32 ->
-  type CharModsFun = Window*, UInt32, Int32 ->
-  type DropFun = Window*, Int32, Int8** ->
-  type MonitorFun = Monitor*, Int32 ->
-  type JoystickFun = Int32, Int32 ->
+  # Vulkan spesific
+  type VkInstance = Void*
+  type VkPhysicalDevice = Void*
+  type VkAllocationCallbacks = Void*
+  type VkSurfaceKHR = Void*
+  type VkResult = Void*
+
+  alias ErrorFun = Int32, UInt8* ->
+  alias WindowPosFun = Window, Int32, Int32 ->
+  alias WindowSizeFun = Window, Int32, Int32 ->
+  alias WindowCloseFun = Window ->
+  alias WindowRefreshFun = Window ->
+  alias WindowFocusFun = Window, Int32 ->
+  alias WindowIconifyFun = Window, Int32 ->
+  alias FramebufferSizeFun = Window, Int32, Int32 ->
+  alias MouseButtonFun = Window, Int32, Int32, Int32 ->
+  alias CursorPosFun = Window, Float64, Float64 ->
+  alias CursorEnterFun = Window, Int32 ->
+  alias ScrollFun = Window, Float64, Float64 ->
+  alias KeyFun = Window, Int32, Int32, Int32, Int32 ->
+  alias CharFun = Window, UInt32 ->
+  alias CharModsFun = Window, UInt32, Int32 ->
+  alias DropFun = Window, Int32, UInt8** ->
+  alias MonitorFun = Monitor, Int32 ->
+  alias JoystickFun = Int32, Int32 ->
 
   struct VidMode
     width : Int32
@@ -339,17 +346,17 @@ lib LibGLFW
   fun init = glfwInit : Int32
   fun terminate = glfwTerminate : Void
   fun version = glfwGetVersion(major : Int32*, minor : Int32*, rev : Int32*) : Void
-  fun version_string = glfwGetVersionString : Int8*
-  fun set_error_callback = glfwSetErrorCallback(cbfun : ErrorFun)
+  fun version_string = glfwGetVersionString : UInt8*
+  fun set_error_callback = glfwSetErrorCallback(cbfun : ErrorFun) : ErrorFun
   fun monitors = glfwGetMonitors(count : Int32*) : Monitor*
   fun primary_monitor = glfwGetPrimaryMonitor : Monitor
   fun monitor_pos = glfwGetMonitorPos(monitor : Monitor, xpos : Int32*, ypos : Int32*)
   fun monitor_physical_size = glfwGetMonitorPhysicalSize(monitor : Monitor, widthMM : Int32*, heightMM : Int32*)
-  fun monitor_name = glfwGetMonitorName(monitor : Monitor) : Int8*
+  fun monitor_name = glfwGetMonitorName(monitor : Monitor) : UInt8*
   fun set_monitor_callback = glfwSetMonitorCallback(cbfun : MonitorFun)
   fun video_modes = glfwGetVideoModes(monitor : Monitor, count : Int32*) : VidMode*
   fun video_mode = glfwGetVideoMode(monitor : Monitor) : VidMode*
-  fun set_gamma = glfwSetGamma(monitor : Monitor*, gamma : Float32)
+  fun set_gamma = glfwSetGamma(monitor : Monitor, gamma : Float32)
   fun gamma_ramp = glfwGetGammaRamp(monitor : Monitor) : GammaRamp*
   fun set_gamma_ram = glfwSetGammaRamp(monitor : Monitor, ramp : GammaRamp*)
   fun default_window_hints = glfwDefaultWindowHints
@@ -379,13 +386,13 @@ lib LibGLFW
   fun window_attrib = glfwGetWindowAttrib(window : Window, attrib : Int32) : Int32
   fun set_window_user_pointer = glfwSetWindowUserPointer(window : Window, pointer : Void*)
   fun window_user_pointer = glfwGetWindowUserPointer(window : Window) : Void*
-  fun set_window_pos_callback = glfwSetWindowPosCallback(window : Window, cbfun : WindowPosFun)
-  fun set_window_size_callback = glfwSetWindowSizeCallback(window : Window, cbfun : WindowSizeFun)
-  fun set_window_close_callback = glfwSetWindowCloseCallback(window : Window, cbfun : WindowCloseFun)
-  fun set_window_refresh_callaback = glfwSetWindowRefreshCallback(window : Window, cbfun : WindowRefreshFun)
-  fun set_window_focus_callback = glfwSetWindowFocusCallback(window : Window, cbfun : WindowFocusFun)
-  fun set_window_iconify_callback = glfwSetWindowIconifyCallback(window : Window, cbfun : WindowIconifyFun)
-  fun set_framebuffer_size_callback = glfwSetFramebufferSizeCallback(window : Window, cbfun : FramebufferSizeFun)
+  fun set_window_pos_callback = glfwSetWindowPosCallback(window : Window, cbfun : WindowPosFun) : WindowPosFun
+  fun set_window_size_callback = glfwSetWindowSizeCallback(window : Window, cbfun : WindowSizeFun) : WindowSizeFun
+  fun set_window_close_callback = glfwSetWindowCloseCallback(window : Window, cbfun : WindowCloseFun) : WindowCloseFun
+  fun set_window_refresh_callaback = glfwSetWindowRefreshCallback(window : Window, cbfun : WindowRefreshFun) : WindowRefreshFun
+  fun set_window_focus_callback = glfwSetWindowFocusCallback(window : Window, cbfun : WindowFocusFun) : WindowFocusFun
+  fun set_window_iconify_callback = glfwSetWindowIconifyCallback(window : Window, cbfun : WindowIconifyFun) : WindowIconifyFun
+  fun set_framebuffer_size_callback = glfwSetFramebufferSizeCallback(window : Window, cbfun : FramebufferSizeFun) : FramebufferSizeFun
   fun poll_events = glfwPollEvents
   fun wait_events = glfwWaitEvents
   fun wait_events_timeout = glfwWaitEventsTimeout(timeout : Float64)
@@ -401,19 +408,19 @@ lib LibGLFW
   fun create_standard_cursor = glfwCreateStandardCursor(shape : Int32) : Cursor
   fun destroy_cursor = glfwDestroyCursor(cursor : Cursor)
   fun set_cursor = glfwSetCursor(window : Window, cursor : Cursor)
-  fun set_key_callback = glfwSetKeyCallback(window : Window, cbfun : KeyFun)
-  fun set_char_callback = glfwSetCharCallback(window : Window, cbfun : CharFun)
-  fun set_char_mods_callback = glfwSetCharModsCallback(window : Window, cbfun : CharModsFun)
-  fun set_mouse_button_callback = glfwSetMouseButtonCallback(window : Window, cbfun : MouseButtonFun)
-  fun set_cursor_pos_callback = glfwSetCursorPosCallback(window : Window, cbfun : CursorPosFun)
-  fun set_cursor_enter_callback = glfwSetCursorEnterCallback(window : Window, cbfun : CursorEnterFun)
-  fun set_scroll_callback = glfwSetScrollCallback(window : Window, cbfun : ScrollFun)
-  fun set_drop_callback = glfwSetDropCallback(window : Window, cbfun : DropFun)
+  fun set_key_callback = glfwSetKeyCallback(window : Window, cbfun : KeyFun) : KeyFun
+  fun set_char_callback = glfwSetCharCallback(window : Window, cbfun : CharFun) : CharFun
+  fun set_char_mods_callback = glfwSetCharModsCallback(window : Window, cbfun : CharModsFun) : CharModsFun
+  fun set_mouse_button_callback = glfwSetMouseButtonCallback(window : Window, cbfun : MouseButtonFun) : MouseButtonFun
+  fun set_cursor_pos_callback = glfwSetCursorPosCallback(window : Window, cbfun : CursorPosFun) : CursorPosFun
+  fun set_cursor_enter_callback = glfwSetCursorEnterCallback(window : Window, cbfun : CursorEnterFun) : CursorEnterFun
+  fun set_scroll_callback = glfwSetScrollCallback(window : Window, cbfun : ScrollFun) : ScrollFun
+  fun set_drop_callback = glfwSetDropCallback(window : Window, cbfun : DropFun) : DropFun
   fun joystick_present = glfwJoystickPresent(joy : Int32) : Int32
   fun joystick_axes = glfwGetJoystickAxes(joy : Int32, count : Int32*) : Float32*
   fun joystick_buttons = glfwGetJoystickButtons(joy : Int32, count : Int32*) : UInt8*
   fun joystick_name = glfwGetJoystickName(joy : Int32) : UInt8*
-  fun set_joystick_callback = glfwSetJoystickCallback(cbfun : JoystickFun)
+  fun set_joystick_callback = glfwSetJoystickCallback(cbfun : JoystickFun) : JoystickFun
   fun set_clipboard_string = glfwSetClipboardString(window : Window, string : UInt8*)
   fun clipboard_string = glfwGetClipboardString(window : Window) : UInt8*
   fun time = glfwGetTime : Float64
@@ -430,9 +437,7 @@ lib LibGLFW
   fun required_instance_extensions = glfwGetRequiredInstanceExtensions(count : UInt32) : UInt8**
 
   #if defined(VK_VERSION_1_0)
-  #fun instance_proc_address = glfwGetInstanceProcAddress(instance : VkInstance, procname : UInt8*) : VKProc
-  #fun physical_device_presentation_support = glfwGetPhysicalDevicePresentationSupport(instance : VkInstance, device : VkPhysicalDevice, queuefamily : UInt32) : Int32
-  #fun create_window_surface = glfwCreateWindowSurface(instance : VkInstance, window : Window, allocator : VkAllocationCallbacks*, surface : VkSurfaceKHR*) : VkResult
-  #endif /*VK_VERSION_1_0*/
-
+  fun instance_proc_address = glfwGetInstanceProcAddress(instance : VkInstance, procname : UInt8*) : VKProc
+  fun physical_device_presentation_support = glfwGetPhysicalDevicePresentationSupport(instance : VkInstance, device : VkPhysicalDevice, queuefamily : UInt32) : Int32
+  fun create_window_surface = glfwCreateWindowSurface(instance : VkInstance, window : Window, allocator : VkAllocationCallbacks, surface : VkSurfaceKHR) : VkResult
 end
