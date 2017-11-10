@@ -2,7 +2,9 @@
 [![Build Status](https://travis-ci.org/lirith-engine/lib_glfw.svg?branch=master)](https://travis-ci.org/lirith-engine/lib_glfw)
 
 Library to expose the GLFW API to Crystal.
-The original API mapping is made by [ggiraldez](https://github.com/ggiraldez/crystal-gl)
+This is a direct mapping of `glfw3.h` found [here](http://www.glfw.org/docs/latest/glfw3_8h_source.html). The current GLFW version is `3.2.1`.
+
+Resleases of this shard are made according to the following format: `[GLFW version].[shard version]`
 
 ## Installation
 
@@ -20,9 +22,36 @@ Install GLFW trough homebrew `brew install glfw3`
 
 ```crystal
 require "lib_glfw"
+
+LibGLFW.init
+handle = LibGLFW.create_window(1920, 1080, "GLFW Window", nil, nil)
+LibGLFW.make_context_current handle
+
+# callbacks are supported trough procs (no blocks):
+def handle_key(window : LibGLFW::Window*, key : Int32, scancode : Int32, action : Int32, mods : Int32) : Void
+  # Do things width the key
+end
+
+LibGLFW.set_key_callback(handle, ->handle_key(LibGLFW::Window*, Int32, Int32, Int32, Int32))
+
+loop do
+  LibGLFW.poll_events
+  LibGLFW.swap_buffers handle
+end
+
+LibGLFW.terminate
 ```
 
-TODO: Write usage instructions here
+All the methods have the same name as the source but with a few key differences:
+
+- The `glfw` prefix is removed
+- The `Get` prefix is removed. `sets` are still used.
+- All names are snake_case instead of camelCase (`glfwMakeContextCurrent` => `make_context_current`)
+
+## Notes
+
+Currently only the `glfw3` core is supported. 
+Extra's like vulkan support are yet to come.
 
 ## Contributing
 
